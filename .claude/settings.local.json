@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(ping:*)",
+      "Bash(nul)",
+      "Bash(git add:*)",
+      "Bash(git rm:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nRefactor: Modular multi-business bot architecture\n\nMajor changes:\n- Converted to master-module architecture\n- Each chat can be independently configured\n- Added eventos-deportivos module (enhanced padel bot)\n- Support for 4+ players with rotation\n- Post-match statistics with 2h delay\n- Per-chat nicknames and configurations\n- Admin-only configuration control\n\nNew features:\n- Natural language configuration\n- Automatic module detection\n- Payment tracking per match\n- Win/loss statistics\n\nStructure:\n- config/ (admin and chat configurations)\n- modulos/eventos-deportivos/ (sports events)\n- Updated CLAUDE.md with new architecture\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

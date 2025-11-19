@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-WhatsApp bot for organizing padel matches in group chats. Built with Node.js and whatsapp-web.js, featuring natural language processing for conversational commands and a simple JSON-based data persistence layer.
+Modular WhatsApp bot system that can be configured per-chat for different business purposes. Currently supports event organization (padel, sports) with plans for expense tracking, data analysis, and more. Built with Node.js and whatsapp-web.js, featuring natural language processing and per-chat configuration.
 
 ## Development Commands
 
@@ -18,13 +18,36 @@ npm dev
 
 ## Architecture
 
-### Core Components
+### Modular System
 
-**index.js** (main file)
+The bot uses a **master-module architecture** where each chat can be independently configured:
+
+**index.js** (bot master)
 - WhatsApp client initialization with LocalAuth strategy
-- Message event handlers for both natural language and slash commands
-- QR code generation for WhatsApp Web authentication (terminal + PNG file)
-- JSON database operations (read/write to partidos.json)
+- Chat configuration detection and management
+- Module routing based on chat configuration
+- Admin-only configuration control
+- QR code generation for WhatsApp Web authentication
+
+**config/**
+- `admin.json` - Admin user configuration (number + name)
+- `chats.json` - Per-chat configuration (nickname, module, purpose)
+
+**modulos/[module-name]/**
+- `handler.js` - Message processing logic for the module
+- `datos.json` - Module-specific database
+- `aprendizajes.md` - Documentation and learning notes
+
+### Current Modules
+
+**eventos-deportivos** - Sports event organization
+- Match creation with NLP
+- Player management (4+ with rotation support)
+- Court confirmation
+- Team randomization
+- Payment tracking
+- Post-match statistics (2h delayed prompt)
+- Win/loss tracking
 
 ### Data Model
 
@@ -138,13 +161,42 @@ guardarDB();  // Always call after mutating db object
 await msg.reply(`emoji *BOLD HEADER*\n\nContent with ✅ emojis`);
 ```
 
-## Natural Language Examples
+## Configuration Flow
 
+### Initial Setup (Admin Only)
+
+When added to a new group, the admin (configured in `config/admin.json`) must configure the chat:
+
+**Natural language:**
+```
+"Hola Cenote, acá te vas a llamar CP y vas a ayudarnos a organizar partidos de pádel"
+```
+
+The bot will:
+1. Extract nickname ("CP")
+2. Detect module type from keywords (pádel → eventos-deportivos)
+3. Save configuration to `config/chats.json`
+4. Respond with confirmation
+
+**Commands:**
+- `/info` - Show current chat configuration
+- `/reconfigurar` - Reset chat configuration (admin only)
+
+### Module-specific Usage
+
+See `modulos/[module-name]/aprendizajes.md` for detailed command lists.
+
+**eventos-deportivos examples:**
 - "Armemos un partido el 25/11 a las 20 en ClubNorte"
-- "Me anoto" / "Yo juego" / "Cuenta conmigo"
-- "Me bajo" / "No puedo" / "Cancelo"
-- "Cancha confirmada $44000" → sets price and confirms court
-- "Pagué $11000" → records individual payment
+- "Me anoto" / "Yo juego"
+- "Cancha confirmada $44000"
 - "Sortear equipos"
-- "Ganamos" → team 1 wins (sender's team assumed)
-- "Cómo vamos?" / "Estado"
+- "Ganamos"
+
+## Adding New Modules
+
+1. Create directory: `modulos/[module-name]/`
+2. Implement `handler.js` with `handleMessage(msg, chatConfig)` export
+3. Create `aprendizajes.md` for documentation
+4. Add module to `MODULOS` object in `index.js`
+5. Add keyword detection in `detectarConfiguracionInicial()`
