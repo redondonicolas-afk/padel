@@ -1,0 +1,24 @@
+{
+  "partidos": [
+    {
+      "id": 1764615359235,
+      "groupId": "120363398808137036@g.us",
+      "dia": "miercoles",
+      "hora": "18:hhs",
+      "lugar": "Lasaigues",
+      "jugadores": [
+        {
+          "nombre": "nico",
+          "agregadoEn": "2025-12-01T18:56:08.628Z"
+        },
+        {
+          "nombre": "agus",
+          "agregadoEn": "2025-12-01T18:56:14.139Z"
+        }
+      ],
+      "equipos": null,
+      "finalizado": false,
+      "createdAt": "2025-12-01T18:55:59.235Z"
+    }
+  ]
+}
